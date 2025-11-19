@@ -1,0 +1,27 @@
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: miniweb_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: myflaskapp
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  miniweb:
+    build: .
+    container_name: miniweb_ssl
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./webapp:/app/webapp
+      - ./ssl:/app/ssl
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
